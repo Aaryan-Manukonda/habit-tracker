@@ -29,6 +29,7 @@ export default function App() {
   const [habits, setHabits] = useState<Habit[]>(loadHabits);
   const [newName, setNewName] = useState('');
   const todayKey = toDateKey(new Date());
+  const doneTodayCount = habits.filter((h) => h.doneDates.includes(todayKey)).length;
 
   useEffect(() => {
     try {
@@ -86,10 +87,18 @@ export default function App() {
         </button>
       </form>
 
+      {habits.length > 0 && (
+        <p className="mt-6 font-medium text-gray-700" role="status">
+          {doneTodayCount === habits.length
+            ? `All ${habits.length} habits done today. Nice work! 🎉`
+            : `${doneTodayCount} of ${habits.length} done today`}
+        </p>
+      )}
+
       {habits.length === 0 ? (
         <p className="mt-6 text-gray-500">No habits yet. Add one above to get started.</p>
       ) : (
-        <ul className="mt-6 space-y-3">
+        <ul className="mt-3 space-y-3">
           {habits.map((habit) => {
             const doneToday = habit.doneDates.includes(todayKey);
             const streak = currentStreak(habit.doneDates);
