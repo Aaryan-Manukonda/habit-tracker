@@ -37,6 +37,19 @@ describe('App', () => {
     expect(screen.getByLabelText('Walk for 30 minutes')).toBeChecked();
   });
 
+  it('shows how many habits are done today', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    expect(screen.getByRole('status')).toHaveTextContent('0 of 3 done today');
+
+    await user.click(screen.getByLabelText('Drink 8 glasses of water'));
+    expect(screen.getByRole('status')).toHaveTextContent('1 of 3 done today');
+
+    await user.click(screen.getByLabelText('Walk for 30 minutes'));
+    await user.click(screen.getByLabelText('In bed by 11pm'));
+    expect(screen.getByRole('status')).toHaveTextContent('All 3 habits done today');
+  });
+
   it('removes a habit', async () => {
     const user = userEvent.setup();
     render(<App />);
